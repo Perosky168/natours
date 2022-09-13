@@ -63,6 +63,14 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+  res.status(200).json({ status: 'success' });
+}
+
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of if its there
   let token;
@@ -134,16 +142,16 @@ exports.isLoggedIn = async (req, res, next) => {
 
 exports.restrictTo =
   (...roles) =>
-  (req, res, next) => {
-    // roles ['admin', 'lead-guide']. role='user
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError('you do not have permission to perform this action', 403)
-      );
-    }
+    (req, res, next) => {
+      // roles ['admin', 'lead-guide']. role='user
+      if (!roles.includes(req.user.role)) {
+        return next(
+          new AppError('you do not have permission to perform this action', 403)
+        );
+      }
 
-    next();
-  };
+      next();
+    };
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email
