@@ -28,6 +28,17 @@ if (userDataForm)
         updateSettings({ name, email }, 'data');
     });
 
+if (userDataForm)
+    userDataForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const form = new FormData();
+        form.append('name', document.getElementById('name').value);
+        form.append('email', document.getElementById('email').value);
+        form.append('photo', document.getElementById('photo').files[0]);
+        console.log(form);
+
+        updateSettings(form, 'data');
+    });
 const userPasswordForm = document.querySelector('.form-user-password');
 if (userPasswordForm)
     userPasswordForm.addEventListener('submit', async e => {

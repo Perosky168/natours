@@ -15,7 +15,7 @@ const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
-      Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 1000
+      Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
   };
@@ -176,8 +176,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Token sent to email!',
     });
   } catch (err) {
-    // user.passwordResetToken = undefined;
-    // user.passwordResetExpires = undefined;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
 
     return next(new AppError(`There was an error ${resetToken}`), 500);

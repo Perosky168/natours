@@ -16,7 +16,6 @@ const bookTour = async (tourId) => {
     } catch (err) {
         console.log(err)
     }
-
 };
 
 const bookBtn = document.getElementById('book-tour');
