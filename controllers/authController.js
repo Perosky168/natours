@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const fecth = require('node-fetch');
 const User = require('../models/userModels');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -140,6 +141,7 @@ exports.isLoggedIn = async (req, res, next) => {
   next();
 };
 
+
 exports.restrictTo =
   (...roles) =>
     (req, res, next) => {
@@ -198,7 +200,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // 2) If token has not expired, and there is user, set the new password
   if (!user) {
-    return next(new AppError('token is invalif or has expired', 400));
+    return next(new AppError('token is invalid or has expired', 400));
   }
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
