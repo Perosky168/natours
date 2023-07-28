@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Defining schema
 const bookingSchema = new mongoose.Schema({
   tour: {
     type: mongoose.Schema.ObjectId,
@@ -13,7 +14,7 @@ const bookingSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    require: [true, 'Booking must have a price.'],
+    required: [true, 'Booking must have a price.'],
   },
   createdAt: {
     type: Date,
@@ -33,6 +34,7 @@ bookingSchema.pre(/^find/, function (next) {
   next();
 });
 
+// Creating a model
 const Booking = mongoose.model('Booking', bookingSchema);
 
 module.exports = Booking;

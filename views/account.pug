@@ -4,7 +4,7 @@ mixin navItem(link, text, icon, active)
   li(class=`${active ? 'side-nav--active' : ''}`)
     a(href=`${link}`)
       svg
-        use(xlink:href=`img/icons.svg#icon-${icon}`)
+        use(xlink:href=`/img/icons.svg#icon-${icon}`)
       | #{text}
 
 block content
@@ -13,10 +13,10 @@ block content
       nav.user-view__menu
         ul.side-nav
           +navItem('#', 'Settings', 'settings', true)
-          +navItem('/my-tours', 'My bookings', 'briefcase')
+          +navItem('/my-bookings', 'My bookings', 'briefcase')
           +navItem('#', 'My reviews', 'star')
           +navItem('#', 'Billing', 'credit-card')
-
+        
         - if (user.role === 'admin')
           .admin-nav
             h5.admin-nav__heading Admin
@@ -29,11 +29,11 @@ block content
       .user-view__content
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Your account settings
-          
-          //- WITHOUT API
-          //- form.form.form-user-data(action='/submit-user-data' method='POST')
 
-          //- WITH API
+          //- Without API
+          //- form.form.form-user-data(action='/submit-user-data', method='POST' enctype='multipart/form-data')
+
+          //- With API
           form.form.form-user-data
             .form__group
               label.form__label(for='name') Name
@@ -42,13 +42,12 @@ block content
               label.form__label(for='email') Email address
               input#email.form__input(type='email', value=`${user.email}`, required, name='email')
             .form__group.form__photo-upload
-              img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
-              input.form__upload(type='file', accept='image/*', id='photo', name='photo')
+              img.form__user-photo(src=`/img/users/${user.photo}`, alt=`${user.name}`)
+              input#photo.form__upload(type='file', accept='image/*', name='photo')
               label(for='photo') Choose new photo
-
             .form__group.right
               button.btn.btn--small.btn--green Save settings
-              
+
         .line &nbsp;
         
         .user-view__form-container

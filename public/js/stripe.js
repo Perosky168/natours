@@ -1,29 +1,19 @@
-const stripe = Stripe('pk_test_51Lg8L6DUiPg1wVsNBwBZWqoQ0mFiEVI1pc19sr4ygoBFkHrD9XVzfavLTLnsMvRLmKsckAPXzL1AngBE0ieolizA00sSz9vEvy')
+import axios from 'axios';
+import { showAlert } from './alerts';
+const stripe = Stripe(
+  'pk_test_51NJCPDSJto3yYpNWpRGuE7Se7jfLa0G10MKeWh8hPWAzBWpP1tCa3CJIHbTdQ9MeBYNx60CemDFdHmJ1goU9sQcC00M4w3GJ1Y'
+);
 
-const bookTour = async (tourId) => {
-    //1) Get the check out session from API
-    try {
-        const session = await axios({
-            method: 'GET',
-            url: `http://127.0.0.1:8000/api/v1/booking/checkout-session/${tourId}`,
-        });
-        console.log(session);
+export const bookTour = async (tourId) => {
+  try {
+    // 1) Get checkout session from API
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
 
-        // 2) Create ckeckout form + charge credit card
-        await stripe.redirectToCheckout({
-            sessionId: session.data.session.id
-        });
-    } catch (err) {
-        console.log(err)
-    }
+    // 2) Create checkout form + charge credit card
+    const checkoutPageUrl = session.data.session.url;
+    window.location.assign(checkoutPageUrl);
+  } catch (error) {
+    showAlert('error', error);
+  }
 };
 
-const bookBtn = document.getElementById('book-tour');
-
-if (bookBtn)
-    bookBtn.addEventListener('click', e => {
-        e.target.textContent = 'Processing...'
-        const { tourId } = e.target.dataset;
-        console.log(tourId)
-        bookTour(tourId);
-    });

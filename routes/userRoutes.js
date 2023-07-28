@@ -1,34 +1,34 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
-const bookingRouter = require('./bookingRoutes');
 
 const router = express.Router();
 
-router.use('/:userId/bookings', bookingRouter)
+// Auth routes
+router.route('/signup').post(authController.signup);
+router.route('/login').post(authController.login);
+router.route('/logout').get(authController.logout);
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
-router.get('/logout', authController.logout);
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
+router.route('/forgotPassword').post(authController.forgotPassword);
+router.route('/resetPassword/:token').patch(authController.resetPassword);
 
-// Protect all routes after this middleware
-//router.use(authController.protect);
+// Middleware works in sequence so protect all routes after this middleware
+router.use(authController.protect);
 
-router.patch('/updateMyPassword', authController.updatePassword);
-router.get('/me', userController.getMe, userController.getUser);
-router.patch(
-  '/updateMe',
-  userController.uploadUserPhoto,
-  userController.resizeUserPhoto,
-  userController.updateMe
-);
+router.route('/updateMyPassword').patch(authController.updatePassword);
+router.route('/me').get(userController.getMe, userController.getUser);
+router
+  .route('/updateMe')
+  .patch(
+    userController.uploadUserPhoto,
+    userController.resizeUserPhoto,
+    userController.updateMe
+  );
+router.route('/deleteMe').delete(userController.deleteMe);
 
-router.delete('/deleteMe', userController.deleteMe);
+router.use(authController.restrictTo('admin'));
 
-// router.use(authController.restrictTo('admin'));
-
+// User routes
 router
   .route('/')
   .get(userController.getAllUsers)
