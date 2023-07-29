@@ -16,7 +16,7 @@ const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      Date.now() + 90 * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
@@ -25,14 +25,6 @@ const createSendToken = (user, statusCode, req, res) => {
   // if (req.secure || req.headers['x-forwarded-proto'] === 'https') cookieOptions.secure = true;
 
   res.cookie('jwt', token, cookieOptions);
-
-  // res.cookie('jwt', token, {
-  //   expires: new Date(
-  //     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-  //   ),
-  //   httpOnly: true,
-  //   secure: req.secure || req.headers('x-forwarded-proto') === 'https',
-  // });
 
   // Remove password from output
   user.password = undefined;
@@ -239,6 +231,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       message: 'Token sent to email!',
+      token: resetToken
     });
   } catch (error) {
     user.passwordResetToken = undefined;

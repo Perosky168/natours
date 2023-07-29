@@ -14,12 +14,19 @@ module.exports = class Email {
     if (process.env.NODE_ENV === 'production') {
       // Mailgun
       return nodemailer.createTransport({
-        host: process.env.MAILGUN_HOST,
-        port: process.env.MAILGUN_PORT,
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
         auth: {
-          user: process.env.MAILGUN_USERNAME,
-          pass: process.env.MAILGUN_PASSWORD,
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
         },
+
+        // host: process.env.MAILGUN_HOST,
+        // port: process.env.MAILGUN_PORT,
+        // auth: {
+        //   user: process.env.MAILGUN_USERNAME,
+        //   pass: process.env.MAILGUN_PASSWORD,
+        // },
       });
     }
 
